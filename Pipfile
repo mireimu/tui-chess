@@ -6,7 +6,6 @@ name = "pypi"
 [packages]
 click = "*"
 chess = "*"
-stockfish = "*"
 
 [dev-packages]
 

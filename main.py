@@ -1,6 +1,10 @@
 import click
 import chess
 import re
+import stockfish
+
+stockfish = Stockfish(
+    path="~/stockfish/stockfish/stockfish-ubuntu-x86-64-sse41-popcnt")
 
 piece_map = {
     "k": "♔",
@@ -33,6 +37,7 @@ def player_move(fen, move):
     Pe4 = chess.Move.from_uci(move)
     board.push(Pe4)
     fen = board.fen()
+    draw_board(fen)
 
 
 @click.group()
@@ -58,13 +63,16 @@ def move(file, move):
     file = file if file is not None else "chessgame.txt"
     fen = ""
     with open(file, "r") as f:
-        fen += f.read()
+        fen = f.read()
     board = chess.Board(fen)
     player_move(fen, move)
+    stockfish.set_fen_position(fen)
+    moves = stockfish.get_top_moves(3)
+    print(moves)
     fen = board.fen()
+    print(fen)
     with open(file, "w") as f:
         f.write(fen)
-    draw_board(fen)
 
 
 cli.add_command(startgame)
